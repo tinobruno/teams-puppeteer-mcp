@@ -4,7 +4,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green.svg)](https://nodejs.org/)
 [![Model Context Protocol](https://img.shields.io/badge/MCP-Compatible-blue.svg)](https://modelcontextprotocol.io/)
 
-A high-performance **Model Context Protocol (MCP)** server for **Microsoft Teams** automation, message extraction, and unread notification monitoring powered by Puppeteer.
+A high-performance **Model Context Protocol (MCP)** server for **Microsoft Teams** chat automation, message extraction, and unread notification monitoring powered by Puppeteer.
 
 ---
 
@@ -16,10 +16,115 @@ Most Microsoft Teams integrations require:
 - ❌ **Paid Microsoft 365 / Graph API licenses & Bot frameworks**
 
 **`teams-puppeteer-mcp` takes a radically simpler approach:**
+- ✅ **Zero Setup / No API Keys**: Uses `npx` with zero local file path configuration.
 - ✅ **Direct Web Client Automation**: Interacts directly with Microsoft Teams (`teams.cloud.microsoft`) using your standard browser profile.
 - ✅ **Persistent SSO & MFA Session**: Log in once interactively with your work, school, or personal account. Your session cookies and tokens persist locally in your user profile.
-- ✅ **Zero Token Overhead**: Optimized specifically for LLMs. Returns clean, high-density human/LLM-readable text. Zero duplicated JSON bloat, avoiding tool hallucination loops.
+- ✅ **Zero Token Overhead**: Optimized specifically for LLMs. Returns clean, high-density human/LLM-readable text without nested JSON bloat.
 - ✅ **Full Cross-Platform Support**: Works seamlessly on **Windows**, **macOS**, and **Linux**.
+
+---
+
+## 🚀 Quick Setup (Zero Configuration)
+
+You do **not** need to manually clone this repository or guess local file paths. You can add it directly to your MCP client using **`npx`**.
+
+### 1. Claude Desktop
+
+Add this to your `claude_desktop_config.json`:
+- **Windows**: `%APPDATA%\\Claude\\claude_desktop_config.json`
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Linux**: `~/.config/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "teams": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@tinobruno/teams-puppeteer-mcp"
+      ]
+    }
+  }
+}
+```
+
+> **Note**: You can also run directly from GitHub without npm:
+> `"args": ["-y", "github:tinobruno/teams-puppeteer-mcp"]`
+
+---
+
+### 2. Cursor
+
+Add to your Cursor MCP settings (`~/.cursor/mcp.json` or via **Settings** → **Features** → **MCP**):
+
+```json
+{
+  "mcpServers": {
+    "teams": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@tinobruno/teams-puppeteer-mcp"
+      ]
+    }
+  }
+}
+```
+
+---
+
+### 3. VS Code (Cline / Roo-Code)
+
+In your Cline MCP settings (`cline_mcp_settings.json`):
+
+```json
+{
+  "mcpServers": {
+    "teams": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@tinobruno/teams-puppeteer-mcp"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+---
+
+### 4. MinnieTheMoEcher
+
+In `mcp_servers.json`:
+
+```json
+{
+  "mcpServers": {
+    "teams-puppeteer": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@tinobruno/teams-puppeteer-mcp"
+      ],
+      "enabled": true,
+      "transport_type": "stdio"
+    }
+  }
+}
+```
+
+---
+
+## 🔑 First-Time Interactive Login
+
+On your first run:
+1. When your AI assistant invokes a Teams tool, a browser window will launch and navigate to Microsoft Teams (`https://teams.cloud.microsoft`).
+2. Log in with your corporate SSO, password, and complete your Multi-Factor Authentication (MFA/2FA) prompt.
+3. Once you reach the Teams chat interface, your session is automatically saved to your local profile directory (`~/.teams_puppeteer_profile` on macOS/Linux, or `%USERPROFILE%\\.teams_puppeteer_profile` on Windows).
+4. Subsequent calls will automatically connect to your authenticated session.
 
 ---
 
@@ -35,149 +140,44 @@ Most Microsoft Teams integrations require:
 
 ---
 
-## 📋 Prerequisites
+## ⚙️ Environment Variables (Optional)
 
-- **Node.js**: `v18.0.0` or higher.
-- **Browser**: Google Chrome, Chromium, or Microsoft Edge installed on your system.
+You can customize the behavior by passing optional `env` variables in your MCP client config:
 
----
-
-## 🚀 Quick Start
-
-### 1. Installation
-
-Clone this repository and install dependencies:
-
-```bash
-git clone https://github.com/<your-username>/teams-puppeteer-mcp.git
-cd teams-puppeteer-mcp
-npm install
-```
-
-### 2. First-Time Interactive Login
-
-By default, the server runs in headed mode (`TEAMS_HEADLESS=false`):
-
-```bash
-node index.js
-```
-
-1. A browser window will automatically launch and navigate to Microsoft Teams (`https://teams.cloud.microsoft`).
-2. Log in with your corporate SSO, password, and complete your Multi-Factor Authentication (MFA/2FA) prompt.
-3. Once you reach your Teams chats, your authentication session is securely stored in `~/.teams_puppeteer_profile` (or `%USERPROFILE%\.teams_puppeteer_profile` on Windows).
-4. Subsequent launches (or background runs via MCP clients) will reuse this authenticated session automatically.
-
----
-
-## 🔌 MCP Client Configuration
-
-### Claude Desktop
-
-Add the server to your `claude_desktop_config.json`:
-
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-- **Linux**: `~/.config/Claude/claude_desktop_config.json`
-
-#### Windows Configuration:
 ```json
 {
   "mcpServers": {
     "teams": {
-      "command": "node",
-      "args": [
-        "C:\\Users\\<YourUser>\\teams-puppeteer-mcp\\index.js"
-      ],
+      "command": "npx",
+      "args": ["-y", "@tinobruno/teams-puppeteer-mcp"],
       "env": {
-        "TEAMS_HEADLESS": "false"
+        "TEAMS_HEADLESS": "true",
+        "PUPPETEER_EXECUTABLE_PATH": "/usr/bin/google-chrome"
       }
     }
   }
 }
 ```
-
-#### macOS / Linux Configuration:
-```json
-{
-  "mcpServers": {
-    "teams": {
-      "command": "node",
-      "args": [
-        "/home/<your-user>/teams-puppeteer-mcp/index.js"
-      ],
-      "env": {
-        "TEAMS_HEADLESS": "false"
-      }
-    }
-  }
-}
-```
-
----
-
-### Cursor
-
-Add to your Cursor MCP settings (`~/.cursor/mcp.json` or via **Settings** → **Features** → **MCP**):
-
-```json
-{
-  "mcpServers": {
-    "teams": {
-      "command": "node",
-      "args": ["/path/to/teams-puppeteer-mcp/index.js"]
-    }
-  }
-}
-```
-
----
-
-### VS Code (Cline / Roo-Code)
-
-In your Cline MCP settings configuration (`cline_mcp_settings.json`):
-
-```json
-{
-  "mcpServers": {
-    "teams": {
-      "command": "node",
-      "args": ["/path/to/teams-puppeteer-mcp/index.js"],
-      "disabled": false,
-      "autoApprove": []
-    }
-  }
-}
-```
-
----
-
-### MinnieTheMoEcher
-
-In `mcp_servers.json`:
-
-```json
-{
-  "mcpServers": {
-    "teams-puppeteer": {
-      "command": "node",
-      "args": ["/path/to/teams-puppeteer-mcp/index.js"],
-      "enabled": true,
-      "transport_type": "stdio"
-    }
-  }
-}
-```
-
----
-
-## ⚙️ Environment Variables
 
 | Variable | Description | Default |
 | :--- | :--- | :--- |
-| `TEAMS_HEADLESS` | Set to `"true"` to run browser invisibly in background after logging in. | `"false"` |
+| `TEAMS_HEADLESS` | Set to `"true"` to run browser in the background after initial login. | `"false"` |
 | `TEAMS_PROFILE_DIR` | Custom directory path for browser cache & persistent session cookies. | `~/.teams_puppeteer_profile` |
 | `PUPPETEER_EXECUTABLE_PATH` | Explicit path to your Chrome or Microsoft Edge executable. | Auto-detected |
 | `DEVTOOLS_PORT` | Connect to an already running Chrome instance with remote debugging. | Auto-detected / `9222` |
+
+---
+
+## 🧑‍💻 Manual Installation (For Developers / Contributors)
+
+If you are developing or modifying the server locally:
+
+```bash
+git clone https://github.com/tinobruno/teams-puppeteer-mcp.git
+cd teams-puppeteer-mcp
+npm install
+node index.js
+```
 
 ---
 
