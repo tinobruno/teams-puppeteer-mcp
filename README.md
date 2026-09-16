@@ -28,6 +28,9 @@ Most Microsoft Teams integrations require:
 
 You do **not** need to manually clone this repository or guess local file paths. You can add it directly to your MCP client using **`npx`**.
 
+> [!TIP]
+> **Merging with existing servers:** If you already have other MCP servers configured in your client, do **not** overwrite the whole file! Simply insert the `"teams"` (or `"teams-puppeteer"`) block into your existing `"mcpServers"` object.
+
 ### 1. Claude Desktop
 
 Add this to your `claude_desktop_config.json`:
@@ -38,6 +41,7 @@ Add this to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
+    "//": "... keep your other existing servers here ...",
     "teams": {
       "command": "npx",
       "args": [
@@ -61,6 +65,7 @@ Add to your Cursor MCP settings (`~/.cursor/mcp.json` or via **Settings** → **
 ```json
 {
   "mcpServers": {
+    "//": "... keep your other existing servers here ...",
     "teams": {
       "command": "npx",
       "args": [
@@ -81,6 +86,7 @@ In your Cline MCP settings (`cline_mcp_settings.json`):
 ```json
 {
   "mcpServers": {
+    "//": "... keep your other existing servers here ...",
     "teams": {
       "command": "npx",
       "args": [
@@ -98,11 +104,12 @@ In your Cline MCP settings (`cline_mcp_settings.json`):
 
 ### 4. MinnieTheMoEcher
 
-In `mcp_servers.json`:
+You can add it via the **Web UI** (under **Settings → MCP Servers → + Add Server**) or by adding this entry into your existing `mcp_servers.json`:
 
 ```json
 {
   "mcpServers": {
+    "//": "... keep your other existing servers here ...",
     "teams-puppeteer": {
       "command": "npx",
       "args": [
@@ -147,6 +154,7 @@ You can customize the behavior by passing optional `env` variables in your MCP c
 ```json
 {
   "mcpServers": {
+    "//": "... keep your other existing servers here ...",
     "teams": {
       "command": "npx",
       "args": ["-y", "@tinobruno/teams-puppeteer-mcp"],
