@@ -1,0 +1,20 @@
+# Smithery configuration file
+# https://smithery.ai/docs/config
+
+startCommand:
+  type: stdio
+  config:
+    command: node
+    args:
+      - ./index.js
+
+configSchema:
+  type: object
+  properties:
+    TEAMS_HEADLESS:
+      type: string
+      default: "false"
+      description: "Run browser invisibly in background after initial login (true or false)"
+    TEAMS_PROFILE_DIR:
+      type: string
+      description: "Custom persistent browser user data directory path"
